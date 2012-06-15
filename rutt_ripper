@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+# Get CC from Disc
+
+# Get CD Info
+# Open Editor for CD Info
+## Include Disc #, Year
+
+# Rip CD to WAV
+
+# Rip WAV to MP3
+## Tag in id3v2
+
+# Rip WAV to Flac
+## Tag in metaflac
