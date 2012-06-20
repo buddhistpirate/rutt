@@ -19,9 +19,13 @@ class SongInfo
   end
 
   def self.from_flac(filename)
-    output = `metaflac --export-tags-to=- #{filename}`
+    output = meta_flac(filename)
     hash = convert_meta_flac_to_hash(output)
     from_meta_flac_hash(hash)
+  end
+
+  def self.meta_flac(filename)
+    `metaflac --export-tags-to=- #{filename}`
   end
 
   def self.convert_meta_flac_to_hash(output)
@@ -31,9 +35,6 @@ class SongInfo
       key,value = line.split("=")
       meta_data[key] = value
     end
-    if ARGV.size == 1
-      meta_data["ALBUM"] = ARGV[0]
-    end
     meta_data
   end
 
@@ -42,9 +43,9 @@ class SongInfo
     options[:album] = hash["ALBUM"] if hash["ALBUM"]
     options[:artist] = hash["ARTIST"] if hash["ARTIST"]
     options[:track_name] = hash["TITLE"] if hash["TITLE"]
-    options[:track_number] = hash["TRACKNUMBER"] if hash["TRACKNUMBER"]
-    options[:disc_number] = hash["DISCNUMBER"] if hash["DISCNUMBER"]
-    options[:date] = hash["DATE"] if hash["DATE"]
+    options[:track_number] = hash["TRACKNUMBER"].to_i if hash["TRACKNUMBER"]
+    options[:disc_number] = hash["DISCNUMBER"].to_i if hash["DISCNUMBER"]
+    options[:date] = hash["DATE"].to_i if hash["DATE"]
     new(options)
   end
 end

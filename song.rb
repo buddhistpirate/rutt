@@ -11,13 +11,16 @@ class Song
 
   def apply_metadata_to_mp3
     command = "id3v2 #{mp3_filename} "
-    command += "-a #{song_info[:artist]}" if song_info[:artist]
-    command += "-A #{song_info[:album]}" if song_info[:album]
-    command += "-t #{song_info[:track_name]}" if song_info[:track_name]
-
+    command += "-a #{song_info.artist} " if song_info.artist
+    command += "-A #{song_info.album} " if song_info.album
+    command += "-t #{song_info.track_name} " if song_info.track_name
+    command += "-T #{song_info.track_number} " if song_info.track_number
+    command += "--TPOS #{song_info.disc_number} " if song_info.disc_number
+    command += "-y #{song_info.date} " if song_info.date
+    Command.run command
   end
 
-  def convert_from_mp3_to_flac
+  def convert_from_flac_to_mp3
     if !File.exists? flac_filename
       puts "ERROR: #{flac_filename} does not exist"
     elsif File.exists? mp3_filename
