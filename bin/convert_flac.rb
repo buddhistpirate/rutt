@@ -1,6 +1,5 @@
-require_relative "song_info"
-require_relative "song"
-require_relative "command"
+#!/usr/bin/env ruby
+require File.expand_path('../lib/rutt', __FILE__)
 
 def get_file_prefix(filename)
 	filename.split(".")[0]
