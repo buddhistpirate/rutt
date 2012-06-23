@@ -10,13 +10,14 @@ class Song
   end
 
   def apply_metadata_to_mp3
-    command = "id3v2 #{mp3_filename} "
-    command += "-a #{song_info.artist} " if song_info.artist
-    command += "-A #{song_info.album} " if song_info.album
-    command += "-t #{song_info.track_name} " if song_info.track_name
-    command += "-T #{song_info.track_number} " if song_info.track_number
-    command += "--TPOS #{song_info.disc_number} " if song_info.disc_number
-    command += "-y #{song_info.date} " if song_info.date
+    command = "id3v2 '#{mp3_filename}' "
+    command += "-a '#{song_info.artist}' " if song_info.artist
+    command += "-A '#{song_info.album}' " if song_info.album
+    command += "-t '#{song_info.track_name}' " if song_info.track_name
+    command += "-T '#{song_info.track_number}' " if song_info.track_number
+    command += "--TPOS '#{song_info.disc_number}' " if song_info.disc_number
+    command += "-y '#{song_info.date}' " if song_info.date
+    puts command
     Command.run command
   end
 
