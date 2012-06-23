@@ -1,4 +1,4 @@
-require_relative "../test_helper"
+require_relative "test_helper"
 class SongInfoTest < Test::Unit::TestCase
 
   def test_can_convert_meta_flac_to_hash
