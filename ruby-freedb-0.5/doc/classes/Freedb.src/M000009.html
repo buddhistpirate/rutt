@@ -1,0 +1,80 @@
+
+<html>
+<head><title>get_result (Freedb)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .kw { color: #3333FF; font-weight: bold }
+  .cmt { color: green; font-style: italic }
+  .str { color: #662222; font-style: italic }
+  .re  { color: #662222; }
+</style>
+</head>
+<body bgcolor="white">
+<pre><span class="cmt"># File lib/freedb.rb, line 287</span>
+  <span class="kw">def</span> get_result(index)
+
+    <span class="kw">if</span> index.is_a?(String)
+      idx = <span class="kw">nil</span>
+      @results.each_with_index { |r, i|
+        <span class="kw">if</span> r =~ /^#{index}/
+          idx = i
+        <span class="kw">end</span>
+      }
+    <span class="kw">else</span>
+      idx = index
+    <span class="kw">end</span>
+
+    md = <span class="re">/^\S+ [0-9a-fA-F]{8}/</span>.match(@results[idx])
+    @handler.send_cmd(<span class="str">&quot;read&quot;</span>, md[0])
+
+    <span class="cmt"># swallow the whole response into a hash</span>
+    response = Hash.new
+
+    each_line(@handler) { |line|
+      @raw_response &lt;&lt; line + <span class="str">&quot;\n&quot;</span>
+      <span class="kw">case</span> line
+        <span class="kw">when</span> <span class="re">/^(\d+) (\S+)/</span>, <span class="re">/^([A-Za-z0-9_]+)=(.*)/</span>
+          key = $1.upcase
+
+          val = $2.gsub(<span class="re">/\\(.)/</span>) {
+            <span class="kw">case</span> $1
+              <span class="kw">when</span> <span class="str">&quot;t&quot;</span>
+                <span class="str">&quot;\t&quot;</span>
+              <span class="kw">when</span> <span class="str">&quot;n&quot;</span>
+                <span class="str">&quot;\n&quot;</span>
+              <span class="kw">else</span>
+                $1
+            <span class="kw">end</span>
+          }
+
+          (response[key] ||= <span class="str">''</span>) &lt;&lt; val
+        <span class="kw">when</span> /^# Revision: (\d+)/
+          @revision = $1.to_i
+      <span class="kw">end</span>
+    }
+    @category = response[<span class="str">'210'</span>]
+    @genre = response[<span class="str">'DGENRE'</span>]
+    @year = response[<span class="str">'DYEAR'</span>].to_i
+    @ext_infos = response[<span class="str">'EXTD'</span>]
+
+    <span class="cmt"># Use a regexp instead of a bare string to avoid ruby &gt;= 1.7 warning</span>
+    @artist, @title = response[<span class="str">'DTITLE'</span>].split(<span class="re">/ \/ /</span>, 2)
+    <span class="cmt"># A self-titled album may not have a title part</span>
+    @title ||= @artist
+
+    response.each { |key, val|
+      <span class="kw">case</span> key
+        <span class="kw">when</span> <span class="re">/^4\d\d$/</span>
+          raise(FreedbError, val)
+        <span class="kw">when</span> <span class="re">/^TTITLE(\d+)$/</span>
+          i = $1.to_i
+          @tracks[i][<span class="str">&quot;title&quot;</span>] = val
+        <span class="kw">when</span> <span class="re">/^EXTT(\d+)$/</span>
+          i = $1.to_i
+          @tracks[i][<span class="str">&quot;ext&quot;</span>] = val
+      <span class="kw">end</span>
+    }
+    <span class="kw">self</span>
+  <span class="kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,33 @@
+
+<html>
+<head><title>submit_http (Freedb)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .kw { color: #3333FF; font-weight: bold }
+  .cmt { color: green; font-style: italic }
+  .str { color: #662222; font-style: italic }
+  .re  { color: #662222; }
+</style>
+</head>
+<body bgcolor="white">
+<pre><span class="cmt"># File lib/freedb.rb, line 239</span>
+  <span class="kw">def</span> submit_http(from = <span class="str">&quot;user@localhost&quot;</span>, server = <span class="str">&quot;freedb.org&quot;</span>, port = 80, path = <span class="str">&quot;/~cddb/submit.cgi&quot;</span>, submit_mode = <span class="str">&quot;submit&quot;</span>)
+    require <span class="str">&quot;net/http&quot;</span>
+    headers = {
+      <span class="str">&quot;Category&quot;</span> =&gt; @category,
+      <span class="str">&quot;Discid&quot;</span> =&gt; @discid,
+      <span class="str">&quot;User-Email&quot;</span> =&gt; from,
+      <span class="str">&quot;Submit-Mode&quot;</span> =&gt; submit_mode,
+      <span class="str">&quot;Charset&quot;</span> =&gt; <span class="str">&quot;ISO-8859-1&quot;</span>,
+      <span class="str">&quot;X-Cddbd-Note&quot;</span> =&gt; &quot;Sent by ruby-freedb #{VERSION}&quot;
+    }
+    Net::HTTP.start(server, port) { |http|
+      reply, body = http.post(path, submit_body(), headers)
+      <span class="kw">if</span> reply.code != 200
+        raise(FreedbError, &quot;Bad response from server: '#{body.chop}'&quot;)
+      <span class="kw">end</span>
+    }
+    <span class="kw">nil</span>
+  <span class="kw">end</span></pre>
+</body>
+</html>

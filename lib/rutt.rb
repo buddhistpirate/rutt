@@ -7,6 +7,8 @@ unless Kernel.respond_to?(:require_relative)
   end
 end
 
+require 'freedb'
 require_relative 'command'
 require_relative 'song'
 require_relative 'song_info'
+require_relative 'album'

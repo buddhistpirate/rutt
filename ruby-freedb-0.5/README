@@ -1,0 +1,4 @@
+http://ruby-freedb.rubyforge.org/ 
+ruby extconf.rb
+make
+make install

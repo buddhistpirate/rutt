@@ -1,0 +1,19 @@
+
+<html>
+<head><title>close (Freedb)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .kw { color: #3333FF; font-weight: bold }
+  .cmt { color: green; font-style: italic }
+  .str { color: #662222; font-style: italic }
+  .re  { color: #662222; }
+</style>
+</head>
+<body bgcolor="white">
+<pre><span class="cmt"># File lib/freedb.rb, line 354</span>
+  <span class="kw">def</span> close
+    @handler.close <span class="kw">if</span> @handler
+    @handler = <span class="kw">nil</span>
+  <span class="kw">end</span></pre>
+</body>
+</html>

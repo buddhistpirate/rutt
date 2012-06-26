@@ -1,5 +1,8 @@
 class SongInfo
 
+LOSSLESS_ROOT = "/home/chubtoad/Audio/Lossless"
+LOSSY_ROOT = "/home/chubtoad/Audio/Lossy"
+
   attr_reader :artist,
               :album,
               :track_name,
@@ -16,6 +19,34 @@ class SongInfo
       @disc_number = options[:disc_number] if options[:disc_number]
       @date = options[:date] if options[:date]
     end
+  end
+
+  def generate_flac_filename
+    get_flac_directory + "/" + generate_relative_file_path + ".flac"
+  end 
+
+  def get_flac_directory
+  "#{LOSSLESS_ROOT}"
+  end
+
+  def generate_mp3_filename
+    get_mp3_directory + "/" + generate_relative_file_path + ".mp3"
+  end
+
+  def get_mp3_directory
+    "#{LOSSY_ROOT}"
+  end
+
+  def generate_relative_file_path
+    "#{generate_relative_album_path}/#{generate_filename_prefix}"
+  end
+
+  def generate_relative_album_path
+    "#{artist}/#{date} - #{album}"
+  end
+
+  def generate_filename_prefix
+    "#{artist} - #{track_number} - #{track_name}"
   end
 
   def self.from_flac(filename)
@@ -46,6 +77,16 @@ class SongInfo
     options[:track_number] = hash["TRACKNUMBER"].to_i if hash["TRACKNUMBER"]
     options[:disc_number] = hash["DISCNUMBER"].to_i if hash["DISCNUMBER"]
     options[:date] = hash["DATE"].to_i if hash["DATE"]
+    new(options)
+  end
+
+  def self.from_freedb_result(result,track_number)
+    options = {}
+    options[:album] = result.title
+    options[:artist] = result.artist
+    options[:track_name] = result.tracks[track_number]["title"]
+    options[:track_number] = track_number + 1
+    options[:date] = result.year
     new(options)
   end
 end

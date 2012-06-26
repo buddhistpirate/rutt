@@ -1,0 +1,19 @@
+
+<html>
+<head><title>fetch_disk (Freedb)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .kw { color: #3333FF; font-weight: bold }
+  .cmt { color: green; font-style: italic }
+  .str { color: #662222; font-style: italic }
+  .re  { color: #662222; }
+</style>
+</head>
+<body bgcolor="white">
+<pre><span class="cmt"># File lib/freedb.rb, line 230</span>
+  <span class="kw">def</span> fetch_disk(directory, win_format = <span class="kw">false</span>)
+    @handler = FetchDisk.new(directory, win_format)
+    _fetch
+  <span class="kw">end</span></pre>
+</body>
+</html>

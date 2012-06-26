@@ -1,0 +1,14 @@
+Source: libfreedb-ruby
+Section: interpreters
+Priority: optional
+Maintainer: Guillaume Pierronnet <moumar@netcourrier.com>
+Standards-Version: 3.1.1
+Build-Depends: debhelper (>= 2.1.2), ruby (>= 1.6.2-6), ruby-dev (>= 1.6.2-6)
+
+Package: libfreedb-ruby
+Architecture: any
+Depends: ${shlibs:Depends}, ruby (>= 1.6)
+Description: Freedb/CDDB module for Ruby
+  Ruby/Freedb is a library that provides access to Freedb/CDDB servers to find some useful CD-Audio informations (CD-title, tracks titles).
+  This library includes low-level functions to access CD-ROM device.
+

@@ -1,0 +1,49 @@
+
+0.5 => 07/02/2003
+* submission (http or mail) added
+* fetching from disk in Unix or Windows format added
+* "raw_response" attribute added (raw response from the server) [Fernando Arbeiza <arbeizaf@ono.com>]
+* "tracks" removed (however it can be redefined with 'tracks.collect { |h| h["title"] }'
+* "tracks_ext" renamed to "tracks"
+* "genre" renamed to "category"
+* "exact_genre" renamed to "genre"
+* "get_result(index)": index can be a String that represents the freedb category
+* FetchCGI: does not rely on cgi.rb anymore
+* documentation written with "rdoc"
+
+0.4.2 => 10/01/2003
+* Fixed a bug in track length computation [Fernando Arbeiza <arbeizaf@ono.com>]
+
+0.4.1 => 13/10/2002
+* Improved cddb parser [Akinori MUSHA <knu@iDaemons.org>]
+* Many bugs fixed in freedb_cdrom.c [Akinori MUSHA <knu@iDaemons.org>]
+
+0.4 => 28/09/2002
+* length attribute added
+* tracks_ext attribute added
+* fixed a bug in discid computation [Akinori MUSHA <knu@iDaemons.org>]
+* protocol level handling
+* test suite
+* code refactoring
+* file renaming (change nothing for end users)
+
+0.3.1 => 30/08/2002
+* genre read-only attribute added, 
+* fixes syntax error due to a change in the Ruby interpreter. [Akinori MUSHA <knu@iDaemons.org>]
+* debianization
+
+0.3 => 07/04/2002
+* fetch() replaced by fetch_net() however i created an alias to fetch()
+* fetch_cgi() added
+* discid read-only attribute added
+* free() bug on FreeBSD fixed in get_cdrom() [Stephane D'Alu <sdalu@loria.fr>]
+* get_cdrom() buffer overrun fixed [OGAWA Takaya <t-ogawa@triaez.kaisei.org>]
+
+0.2 => 19/01/2002
+* Big cleaning of code.
+* Minimum code ( just the CDROM access ) written in C. Other is in pure Ruby.
+* Module now called 'freedb' instead of 'Freedb'.
+* Deleted specific exceptions. There is only one now (FreedbError).
+
+0.1 => 18/12/2001
+* Initial version

@@ -1,0 +1,37 @@
+
+<html>
+<head><title>submit_mail (Freedb)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .kw { color: #3333FF; font-weight: bold }
+  .cmt { color: green; font-style: italic }
+  .str { color: #662222; font-style: italic }
+  .re  { color: #662222; }
+</style>
+</head>
+<body bgcolor="white">
+<pre><span class="cmt"># File lib/freedb.rb, line 261</span>
+  <span class="kw">def</span> submit_mail(smtp_server, from = <span class="str">&quot;localuser@localhost&quot;</span>, port = 25, to = <span class="str">&quot;freedb-submit@freedb.org&quot;</span>)
+    <span class="cmt"># +to+ can be set to &quot;test-submit@freedb.org&quot; to check validity (for</span>
+    <span class="cmt"># developpers)</span>
+    require <span class="str">&quot;net/smtp&quot;</span>
+    header = {
+      <span class="str">&quot;From&quot;</span> =&gt; from,
+      <span class="str">&quot;To&quot;</span> =&gt; to,
+      <span class="str">&quot;Subject&quot;</span> =&gt; &quot;cddb #{@category} #{@discid}&quot;,
+      <span class="str">&quot;MIME-Version&quot;</span> =&gt; <span class="str">&quot;1.0&quot;</span>,
+      <span class="str">&quot;Content-Type&quot;</span> =&gt; <span class="str">&quot;text/plain&quot;</span>,
+      <span class="str">&quot;Content-Transfer-Encoding&quot;</span> =&gt; <span class="str">&quot;quoted-printable&quot;</span>,
+      <span class="str">&quot;X-Cddbd-Note&quot;</span> =&gt; &quot;Sent by ruby-freedb #{VERSION}&quot; 
+    }
+    msg = <span class="str">&quot;&quot;</span>
+    header.each { |k, v|
+      msg &lt;&lt; &quot;#{k}: #{v}\r\n&quot;
+    }
+    msg &lt;&lt; <span class="str">&quot;\r\n&quot;</span>
+    msg &lt;&lt; submit_body
+    Net::SMTP.start(smtp_server, port) { |smtp| smtp.send_mail(msg, from, to) }
+    <span class="kw">nil</span>
+  <span class="kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,307 @@
+
+<html><head>
+  <title>Class: Freedb</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link rel=StyleSheet href=".././rdoc-style.css" type="text/css" media=screen>
+  <script type="text/javascript" language="JavaScript">
+  <!--
+  function popCode(url) {
+    parent.frames.source.location = url
+  }
+  //-->
+  </script>
+</head>
+<body bgcolor="white">
+
+
+<table width="100%" border=0 cellspacing=0>
+ <tr class="title-row">
+ <td class="big-title-font">
+   <font size=-3><B>Class</B><BR></font>Freedb
+ </td>
+ <td align="right">
+   <table cellspacing=0 cellpadding=2>
+     <tr valign="top">
+      <td class="small-title-font">In:</td>
+      <td class="small-title-font">
+<a href="../files/lib/freedb_rb.html">lib/freedb.rb</a>
+      </td>
+     </tr>
+     <tr>
+      <td class="small-title-font">Parent:</td>
+      <td class="small-title-font">
+Object
+      </td>
+     </tr>
+   </table>
+  </td>
+  </tr>
+</table><br>
+  <!-- banner header -->
+
+
+
+</div>
+
+<table cellpadding=5 width="100%">
+<tr><td class="tablesubtitle">Methods</td></tr>
+</table><br>
+<div class="name-list">
+<a href="#M000010">close</a>,
+<a href="#M000003">fetch</a>,
+<a href="#M000004">fetch_cgi</a>,
+<a href="#M000005">fetch_disk</a>,
+<a href="#M000002">fetch_net</a>,
+<a href="#M000009">get_result</a>,
+<a href="#M000001">new</a>,
+<a href="#M000007">submit</a>,
+<a href="#M000006">submit_http</a>,
+<a href="#M000008">submit_mail</a>,
+</div>
+
+<table cellpadding=5 width="100%">
+<tr><td class="tablesubtitle">Attributes</td></tr>
+</table><br>
+<table cellspacing=5>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[RW]&nbsp;</td>
+       <td class="attr-name">artist</td>
+       <td><p>
+artist of the CD, must not be empty
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[RW]&nbsp;</td>
+       <td class="attr-name">category</td>
+       <td><p>
+freedb category, must be one of <tt>Freedb::VALID_CATEGORIES</tt>
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[R]&nbsp;</td>
+       <td class="attr-name">discid</td>
+       <td><p>
+cddbid of the CD
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[RW]&nbsp;</td>
+       <td class="attr-name">ext_infos</td>
+       <td><p>
+extended infos of the CD
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[RW]&nbsp;</td>
+       <td class="attr-name">genre</td>
+       <td><p>
+arbitraty string for the genre
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[R]&nbsp;</td>
+       <td class="attr-name">length</td>
+       <td><p>
+total length of the CD
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[R]&nbsp;</td>
+       <td class="attr-name">query</td>
+       <td><p>
+the complete string used to query the database
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[R]&nbsp;</td>
+       <td class="attr-name">raw_response</td>
+       <td><p>
+string containing raw entry from freedb database
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[R]&nbsp;</td>
+       <td class="attr-name">results</td>
+       <td><p>
+an array with all possible results for this CD
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[RW]&nbsp;</td>
+       <td class="attr-name">title</td>
+       <td><p>
+title of the CD, must not be empty
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[RW]&nbsp;</td>
+       <td class="attr-name">tracks</td>
+       <td><p>
+an array of hashs containing following keys: &quot;title&quot; (must not be
+empty), &quot;length&quot;, &quot;ext&quot; (for extended infos)
+</p>
+</td>
+     </tr>
+     <tr valign="top">
+       <td align="center" class="attr-rw">&nbsp;[RW]&nbsp;</td>
+       <td class="attr-name">year</td>
+       <td><p>
+year of the cd (0 if not known)
+</p>
+</td>
+     </tr>
+</table>
+
+
+  
+
+<table cellpadding=5 width="100%">
+<tr><td class="tablesubtitle">Public Class methods</td></tr>
+</table>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000001">
+<b>new</b>(param = &quot;/dev/cdrom&quot;, is_query = false) 
+<a href="Freedb.src/M000001.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+If <tt>is_query</tt> is false, the discid of the CD in <tt>param</tt> is
+dumped. Else <tt>param</tt> is considered as a valid freedb query string
+and is used directly.
+</p>
+</div>
+<table cellpadding=5 width="100%">
+<tr><td class="tablesubtitle">Public Instance methods</td></tr>
+</table>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000002">
+<b>fetch_net</b>(server = &quot;freedb.org&quot;, port = 8880) 
+<a href="Freedb.src/M000002.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+Query database using network Fill the <tt>results</tt> array with multiple
+results. return nil if no match found
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000003">
+<b>fetch</b>(server = &quot;freedb.org&quot;, port = 8880) 
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+Alias for <a href="Freedb.html#M000002">fetch_net</a>
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000004">
+<b>fetch_cgi</b>(server = &quot;www.freedb.org&quot;, port = 80, proxy = nil, proxy_port = nil, path = &quot;/~cddb/cddb.cgi&quot;) 
+<a href="Freedb.src/M000004.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+Query database using CGI (HTTP) method. Fill the <tt>results</tt> array
+with multiple results. return nil if no match found
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000005">
+<b>fetch_disk</b>(directory, win_format = false) 
+<a href="Freedb.src/M000005.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+Query database using local directory. Set <tt>win_format</tt> to true if
+the database has windows format (see freedb howto in &quot;misc/&quot; for
+details) return nil if no match found
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000006">
+<b>submit_http</b>(from = &quot;user@localhost&quot;, server = &quot;freedb.org&quot;, port = 80, path = &quot;/~cddb/submit.cgi&quot;, submit_mode = &quot;submit&quot;) 
+<a href="Freedb.src/M000006.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+submit the current <a href="Freedb.html">Freedb</a> object using http
+<tt>from</tt> is an email adress used to return submissions errors
+<tt>submit_mode</tt> can be set to &quot;test&quot; to check submission
+validity (for developpers) return nil
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000007">
+<b>submit</b>(from = &quot;user@localhost&quot;, server = &quot;freedb.org&quot;, port = 80, path = &quot;/~cddb/submit.cgi&quot;, submit_mode = &quot;submit&quot;) 
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+Alias for <a href="Freedb.html#M000006">submit_http</a>
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000008">
+<b>submit_mail</b>(smtp_server, from = &quot;localuser@localhost&quot;, port = 25, to = &quot;freedb-submit@freedb.org&quot;) 
+<a href="Freedb.src/M000008.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+submit the current <a href="Freedb.html">Freedb</a> object using smtp
+return <tt>nil</tt>
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000009">
+<b>get_result</b>(index) 
+<a href="Freedb.src/M000009.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+Retrieve full result from the database. If <tt>index</tt> is a Fixnum, get
+the <tt>index</tt>'th result in the <tt>result</tt> array If <tt>index</tt>
+is a String, <tt>index</tt> is the freedb category
+</p>
+</div>
+<table width="100%" cellspacing = 0 cellpadding=5 border=0>
+<tr><td class="methodtitle">
+<a name="M000010">
+<b>close</b>() 
+<a href="Freedb.src/M000010.html" target="source" class="srclink">src</a>
+</a></td></tr>
+</table>
+<div class="description">
+<p>
+close all pending connections
+</p>
+</div>
+  <!-- method descriptions -->
+
+</body>
+</html>

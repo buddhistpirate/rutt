@@ -1,0 +1,19 @@
+
+<html>
+<head><title>fetch_net (Freedb)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .kw { color: #3333FF; font-weight: bold }
+  .cmt { color: green; font-style: italic }
+  .str { color: #662222; font-style: italic }
+  .re  { color: #662222; }
+</style>
+</head>
+<body bgcolor="white">
+<pre><span class="cmt"># File lib/freedb.rb, line 212</span>
+  <span class="kw">def</span> fetch_net(server = <span class="str">&quot;freedb.org&quot;</span>, port = 8880)
+    @handler = FetchNet.new(server, port)
+    _fetch
+  <span class="kw">end</span></pre>
+</body>
+</html>

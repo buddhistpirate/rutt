@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require File.expand_path('../../lib/rutt.rb', __FILE__)
+
+album = Album.from_cdrom
+album.songs.each do |song|
+    puts song.mp3_filename
+    puts song.flac_filename
+    puts song.song_info.track_name
+end
+# Get CD Info
+# Open Editor for CD Info
+## Include Disc #, Year
+
+# Rip CD to WAV
+
+# Rip WAV to MP3
+## Tag in id3v2
+
+# Rip WAV to Flac
+## Tag in metaflac

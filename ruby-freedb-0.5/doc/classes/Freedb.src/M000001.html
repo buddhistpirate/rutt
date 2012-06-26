@@ -1,0 +1,40 @@
+
+<html>
+<head><title>new (Freedb)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .kw { color: #3333FF; font-weight: bold }
+  .cmt { color: green; font-style: italic }
+  .str { color: #662222; font-style: italic }
+  .re  { color: #662222; }
+</style>
+</head>
+<body bgcolor="white">
+<pre><span class="cmt"># File lib/freedb.rb, line 182</span>
+  <span class="kw">def</span> initialize(param = <span class="str">&quot;/dev/cdrom&quot;</span>, is_query = <span class="kw">false</span>)
+    @query = 
+      <span class="kw">if</span> is_query 
+        param
+      <span class="kw">else</span>
+        require <span class="str">&quot;freedb_cdrom&quot;</span>
+        get_cdrom(param)
+      <span class="kw">end</span>
+    q = @query.split(<span class="str">&quot; &quot;</span>)
+    @discid = q[0]
+    nb_tracks = q[1].to_i
+    @length = q[-1].to_i
+    @offsets = q[2...-1] &lt;&lt; @length*CD_FRAME
+    @offsets.collect! { |x| x.to_i }
+
+    @tracks = Array.new
+
+    nb_tracks.times { |i|
+      t = Hash.new
+      t[<span class="str">&quot;length&quot;</span>] = ((@offsets[i+1]-@offsets[i]).to_f/CD_FRAME).round
+      @tracks &lt;&lt; t
+    }
+    @revision = 0
+    @raw_response = <span class="str">&quot;&quot;</span>
+  <span class="kw">end</span></pre>
+</body>
+</html>
