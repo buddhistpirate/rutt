@@ -9,6 +9,7 @@ class Song
     @song_info = song_info
   end
 
+
   def apply_metadata_to_mp3
     command = "id3v2 '#{mp3_filename}' "
     command += "-a '#{song_info.artist}' " if song_info.artist

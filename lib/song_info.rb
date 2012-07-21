@@ -3,12 +3,12 @@ class SongInfo
 LOSSLESS_ROOT = "/home/chubtoad/Audio/Lossless"
 LOSSY_ROOT = "/home/chubtoad/Audio/Lossy"
 
-  attr_reader :artist,
-              :album,
-              :track_name,
-              :track_number,
-              :disc_number,
-              :date
+  attr_accessor :artist,
+                :album,
+                :track_name,
+                :track_number,
+                :disc_number,
+                :date
 
   def initialize(options = nil)
     if options
