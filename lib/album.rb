@@ -14,6 +14,10 @@ class Album
         "#{artist}/#{date} - #{name}"
     end
 
+    def track_numbers
+        songs.map(&:track_number)
+    end
+
     def update_songs
         songs.each do |song|
             song.song_info.album = name

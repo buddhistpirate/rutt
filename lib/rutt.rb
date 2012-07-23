@@ -8,8 +8,12 @@ unless Kernel.respond_to?(:require_relative)
 end
 
 require 'freedb'
+require 'fileutils'
+require 'yaml'
 require_relative 'command'
 require_relative 'song'
 require_relative 'song_info'
 require_relative 'album'
-require_relative 'ripper'
+require_relative 'encoder'
+require_relative 'cd'
+require_relative 'wav_to_mp3_encoder'

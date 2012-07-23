@@ -3,12 +3,16 @@ class Song
   attr_accessor :song_info
   attr_reader :mp3_filename, :flac_filename
 
+
   def initialize(mp3_filename, flac_filename, song_info = SongInfo.new)
     @mp3_filename = mp3_filename
     @flac_filename = flac_filename
     @song_info = song_info
   end
 
+  def track_number
+    song_info.track_number
+  end
 
   def apply_metadata_to_mp3
     command = "id3v2 '#{mp3_filename}' "
@@ -28,7 +32,7 @@ class Song
     elsif File.exists? mp3_filename
       puts "WARNING: #{mp3_filename} already exists"
     else
-      Command.run "flac -dc #{flac_filename} | lame -b 192 -h - #{mp3_filename}"
+      Encoder.flac_to_mp3(flac_filename,mp3_filename) 
     end
   end
 end
