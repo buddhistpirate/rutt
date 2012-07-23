@@ -31,7 +31,10 @@ class Cd
         FileUtils.mkpath(wav_path)
         track_numbers.each do |track_number|
             wav_filename = generate_wav_filename(track_number)
-            unless File.exists? wav_filename
+            if File.exists? wav_filename
+                puts "Track #{track_number} already ripped to wav at #{wav_filename}"
+            else
+                puts "Ripping track #{track_number} to wav at #{wav_filename}"
                 Encoder.track_to_wav(track_number,wav_filename)
             end
         end
