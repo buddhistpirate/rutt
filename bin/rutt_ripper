@@ -20,13 +20,17 @@ cd.rip_to_wav
 disc_path = cd.disc_path
 wav_path = cd.wav_path
 
+transcoder = Transcoder.new(wav_path)
+
 mp3_path = "#{disc_path}/mp3"
-mp3_encoder = WavToMp3Encoder.new(wav_path)
-mp3_encoder.convert_all_files_to_mp3(mp3_path)
+transcoder.convert_all_to_mp3(mp3_path)
 
 #Rename/Move Files
 #Add id3v2 tags
 
 # Rip WAV to Flac
+flac_path = "#{disc_path}/flac"
+transcoder.convert_all_to_flac(flac_path)
+
 #Rename/Move Files
 #Add metaflac tags
