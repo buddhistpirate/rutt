@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require File.expand_path('../../lib/rutt.rb', __FILE__)
 
-RIP_ROOT = '~/Audio/rutt'
-MP3_ROOT = '~/Audio/Lossy'
-FLAC_ROOT= '~/Audio/Lossless'
+RIP_ROOT = File.expand_path '~/Audio/rutt'
+MP3_ROOT = File.expand_path '~/Audio/Lossy'
+FLAC_ROOT= File.expand_path '~/Audio/Lossless'
 
 cd = Cd.new(RIP_ROOT)
 
@@ -14,6 +14,7 @@ yaml_path = cd.yaml_path
 # Open Editor for CD Info
 system("/usr/bin/editor #{yaml_path}")
 cd.reload_album_info_from_yaml
+album = cd.album
 
 cd.rip_to_wav
 
@@ -23,14 +24,26 @@ wav_path = cd.wav_path
 transcoder = Transcoder.new(wav_path)
 
 mp3_path = "#{disc_path}/mp3"
-transcoder.convert_all_to_mp3(mp3_path)
+transcoder.convert_all_wav_to_mp3(mp3_path)
 
-#Rename/Move Files
 #Add id3v2 tags
+#Rename/Move Files
+album_path = "#{MP3_ROOT}/#{album.dir_name}"
+FileUtils.mkpath(album_path)
+Dir.glob("#{mp3_path}/*.mp3").each do |mp3_file|
+    mp3_filename = File.basename mp3_file
+    track_number = mp3_filename.split(".mp3").first.to_i
+    song = album.track_info(track_number)
+    song.apply_to_mp3(mp3_file)
+    full_mp3_path = "#{album_path}/#{song.generate_mp3_filename}"
+    
+    FileUtils.mv(mp3_file, full_mp3_path)
+end
+
 
 # Rip WAV to Flac
 flac_path = "#{disc_path}/flac"
-transcoder.convert_all_to_flac(flac_path)
+transcoder.convert_all_wav_to_flac(flac_path)
 
 #Rename/Move Files
 #Add metaflac tags

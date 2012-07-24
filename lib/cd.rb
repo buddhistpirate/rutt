@@ -54,7 +54,7 @@ class Cd
     end
 
     def disc_path
-       File.expand_path "#{rip_root}/#{album.discid}"
+       "#{rip_root}/#{album.discid}"
     end
 
 end

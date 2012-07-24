@@ -5,13 +5,18 @@ class Album
     def initialize(songs, discid = nil)
         @discid = discid
         @songs = songs
-        @date= songs.first.song_info.date
-        @name = songs.first.song_info.album
-        @artist = songs.first.song_info.artist
+        @date= songs.first.date
+        @name = songs.first.album
+        @artist = songs.first.artist
+        @disc_number = songs.first.disc_number
     end
 
     def dir_name
         "#{artist}/#{date} - #{name}"
+    end
+
+    def track_info(track_number)
+        songs.select {|song| song.track_number.eql? track_number}.first
     end
 
     def track_numbers
@@ -20,9 +25,9 @@ class Album
 
     def update_songs
         songs.each do |song|
-            song.song_info.album = name
-            song.song_info.artist = artist
-            song.song_info.date = date
+            song.album = name
+            song.artist = artist
+            song.date = date
         end
     end
 
@@ -30,10 +35,7 @@ class Album
         result = freedb_result_from_cd
         songs = []
         result.tracks.each_with_index do |track_hash,num|
-            song_info = SongInfo.from_freedb_result(result,num)
-            flac_filename = song_info.generate_flac_filename
-            mp3_filename = song_info.generate_mp3_filename
-            songs << Song.new(mp3_filename,flac_filename,song_info)
+            songs << Song.from_freedb_result(result,num)
         end
         self.new(songs, result.discid)
     end

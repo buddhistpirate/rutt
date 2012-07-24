@@ -2,20 +2,22 @@
 require File.expand_path('../../lib/rutt.rb', __FILE__)
 
 def get_file_prefix(filename)
-	filename.split(".")[0]
+	filename.split(".flac").first
 end
 
-files = Dir.glob("*.flac")
+puts "Transcoding file from flac to mp3"
 
+transcoder = Transcoder.new(Dir.pwd)
+transcoder.convert_all_flac_to_mp3(Dir.pwd)
+
+puts "Adding Metadata to MP3 files"
+
+files = Dir.glob("*.flac")
 files.each do |flac_filename|
 	mp3_filename = "#{get_file_prefix flac_filename}.mp3"
 
-  song_info = SongInfo.from_flac(flac_filename)
-  song = Song.new(mp3_filename, flac_filename, song_info)
-
-	puts "Converting #{flac_filename} to #{mp3_filename}"
-	song.convert_from_flac_to_mp3
+    song = Song.from_flac(flac_filename)
 
 	puts "Updating ID3v2 tags on #{mp3_filename}"
-	song.apply_metadata_to_mp3
+	song.apply_to_mp3 mp3_filename
 end
