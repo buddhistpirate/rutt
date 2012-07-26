@@ -1,23 +1,20 @@
 #!/usr/bin/env ruby
 require File.expand_path('../../lib/rutt.rb', __FILE__)
 
-def get_file_prefix(filename)
-	filename.split(".flac").first
-end
+LOSSY_ROOT=File.expand("~/Audio/Lossy")
 
 puts "Transcoding file from flac to mp3"
 
-transcoder = Transcoder.new(Dir.pwd)
-transcoder.convert_all_flac_to_mp3(Dir.pwd)
+album = Album.from_flac_directory(Dir.pwd)
+album_path = "#{LOSSY_ROOT}/#{album.dir_name}"
+
+transcoder = Transcoder.new(album.songs)
+transcoder.convert_all_flac_to_mp3(album_path)
 
 puts "Adding Metadata to MP3 files"
-
-files = Dir.glob("*.flac")
-files.each do |flac_filename|
-	mp3_filename = "#{get_file_prefix flac_filename}.mp3"
-
-    song = Song.from_flac(flac_filename)
-
-	puts "Updating ID3v2 tags on #{mp3_filename}"
-	song.apply_to_mp3 mp3_filename
+    album.songs.each do |song|
+        mp3_filename = "#{album_path}/#{song.generate_mp3_filename}"
+        puts "Updating ID3v2 tags on #{mp3_filename}"
+        song.apply_to_mp3 mp3_filename
+    end
 end

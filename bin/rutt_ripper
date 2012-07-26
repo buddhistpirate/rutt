@@ -21,23 +21,21 @@ cd.rip_to_wav
 disc_path = cd.disc_path
 wav_path = cd.wav_path
 
-transcoder = Transcoder.new(wav_path)
+transcoder = Transcoder.new(album.songs)
 
-mp3_path = "#{disc_path}/mp3"
-transcoder.convert_all_wav_to_mp3(mp3_path)
+tmp_mp3_path = "#{disc_path}/mp3"
+transcoder.convert_all_wav_to_mp3(tmp_mp3_path)
 
 #Add id3v2 tags
 #Rename/Move Files
-album_path = "#{MP3_ROOT}/#{album.dir_name}"
-FileUtils.mkpath(album_path)
-Dir.glob("#{mp3_path}/*.mp3").each do |mp3_file|
-    mp3_filename = File.basename mp3_file
-    track_number = mp3_filename.split(".mp3").first.to_i
-    song = album.track_info(track_number)
-    song.apply_to_mp3(mp3_file)
-    full_mp3_path = "#{album_path}/#{song.generate_mp3_filename}"
-    
-    FileUtils.mv(mp3_file, full_mp3_path)
+mp3_album_path = "#{MP3_ROOT}/#{album.dir_name}"
+FileUtils.mkpath(mp3_album_path)
+
+
+album.songs.each do |song|
+    song.mp3 = "#{mp3_album_path}/#{song.generate_mp3_filename}"
+    FileUtils.mv(song.tmp_mp3, song.mp3)
+    song.apply_to_mp3 song.mp3
 end
 
 

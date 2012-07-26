@@ -1,52 +1,54 @@
 class Transcoder
 
-    WAV_EXTENSION = ".wav"
-    MP3_EXTENSION = ".mp3"
-    FLAC_EXTENSION= ".flac"
+    WAV_EXTENSION = "wav"
+    MP3_EXTENSION = "mp3"
+    FLAC_EXTENSION= "flac"
 
-    attr_reader :directory
+    attr_reader :songs
 
-    def initialize(directory)
-        @directory = directory
+    def initialize(songs)
+        @songs = songs
     end
 
     def convert_all_wav_to_mp3(mp3_output_directory)
-        iterate_unconverted_files(WAV_EXTENSION,mp3_output_directory,MP3_EXTENSION) do |full_wav_path, full_mp3_path|
-            Encoder.wav_to_mp3(full_wav_path, full_mp3_path)
+        FileUtils.mkpath mp3_output_directory
+        unconverted_songs = songs.reject{|song| song.converted_to_mp3? }
+
+        unconverted_songs.each do |song|
+            output_file = tmp_output_filename(mp3_output_directory,song,MP3_EXTENSION)
+            song.tmp_mp3 = output_file
+            Encoder.wav_to_mp3(song.wav,output_file)
         end
+
     end
 
     def convert_all_wav_to_flac(flac_output_directory)
-        iterate_unconverted_files(WAV_EXTENSION,flac_output_directory,FLAC_EXTENSION) do |full_wav_path, full_flac_path|
-            Encoder.wav_to_flac(full_wav_path, full_flac_path)
+        FileUtils.mkpath flac_output_directory
+        unconverted_songs = songs.reject{|song| song.converted_to_flac?}
+
+        unconverted_songs.each do |song|
+            output_file = tmp_output_filename(flac_output_directory,song,FLAC_EXTENSION)
+            song.tmp_flac = output_file
+            Encoder.wav_to_flac(song.wav, output_file)
         end
     end
 
-    def convert_all_flac_to_mp3(mp3_output_directory)
-        iterate_unconverted_files(FLAC_EXTENSION,mp3_output_directory,MP3_EXTENSION) do |full_flac_path, full_mp3_path|
-            Encoder.flac_to_mp3(full_flac_path, full_mp3_path)
+    def convert_all_flac_to_mp3(output_directory)
+        FileUtils.mkpath output_directory
+        unconverted_songs = songs.reject{|song| song.has_mp3? || File.exists? relative_mp3_filename(output_directory,song)}
+        
+        unconverted_songs.each do |song|
+            output_file = relative_mp3_filename(output_directory,song) 
+            song.mp3 = output_file
+            Encoder.flac_to_mp3(song.flac, output_file)
         end
     end
 
-    def iterate_unconverted_files(src_extension, output_directory, dst_extension)
-        FileUtils.mkpath(output_directory)
-        files(src_extension).each do |full_src_path|
-            src_filename = File.basename(full_src_path) 
-            track_prefix = src_filename.split(src_extension).first
-
-            output_filename = "#{track_prefix}#{dst_extension}"
-            full_output_path = "#{output_directory}/#{output_filename}"
-
-            if File.exists? full_output_path
-                puts "Already encoded #{track_prefix} as #{output_filename}"
-            else
-                puts "Encoding #{src_filename} to #{dst_extension} as #{output_filename}"
-                yield full_src_path, full_output_path
-            end
-        end
+    def tmp_output_filename(output_dir,song,extension)
+        "#{output_directory}/#{song.tmp_filename_prefix}.#{extension}"
     end
 
-    def files(src_extension)
-        Dir.glob("#{directory}/*#{src_extension}")
+    def relative_mp3_filename(directory,song)
+        "#{mp3_output_directory}/#{song.generate_mp3_filename}"
     end
 end

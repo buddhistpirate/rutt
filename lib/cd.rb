@@ -26,16 +26,18 @@ class Cd
     end
 
     def rip_to_wav
-        track_numbers = album.track_numbers
-        puts "Ripping #{track_numbers.size} tracks from #{album.name} by #{album.artist} from #{album.date} to wav at #{wav_path}"
+        songs = album.songs
+        puts "Ripping #{songs.size} tracks from #{album.name} by #{album.artist} from #{album.date} to wav at #{wav_path}"
         FileUtils.mkpath(wav_path)
-        track_numbers.each do |track_number|
-            wav_filename = generate_wav_filename(track_number)
-            if File.exists? wav_filename
-                puts "Track #{track_number} already ripped to wav at #{wav_filename}"
+        songs.each do |song|
+            track_number = song.track_number
+            full_wav_path = generate_full_wav_path(song)
+            song.wav = full_wav_path
+            if File.exists? full_wav_path
+                puts "Track #{track_number} already ripped to wav at #{full_wav_path}"
             else
-                puts "Ripping track #{track_number} to wav at #{wav_filename}"
-                Encoder.track_to_wav(track_number,wav_filename)
+                puts "Ripping track #{track_number} to wav at #{full_wav_path}"
+                Encoder.track_to_wav(track_number,full_wav_path)
             end
         end
     end
@@ -48,9 +50,8 @@ class Cd
         "#{disc_path}/wav"
     end
 
-    def generate_wav_filename(track_number)
-        track_string = sprintf("%03d",track_number)
-        "#{wav_path}/#{track_string}.wav"
+    def generate_full_wav_path(song)
+        "#{wav_path}/#{song.generate_wav_filename}"
     end
 
     def disc_path

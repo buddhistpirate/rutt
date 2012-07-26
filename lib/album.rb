@@ -50,4 +50,15 @@ class Album
         return freedb.get_result(0) unless freedb.results.size > 1
         return freedb.get_result(0)
     end
+
+    def self.from_flac_directory(directory)
+        files = Dir.glob("*.flac")
+        songs = []
+        
+        files.each do |flac_filename|
+            songs << Song.from_flac(flac_filename)
+        end
+        self.new(songs)
+    end
+
 end
