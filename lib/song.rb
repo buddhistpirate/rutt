@@ -8,7 +8,7 @@ class Song
                 :date,
                 :wav,
                 :tmp_mp3,
-                :mp3
+                :mp3,
                 :tmp_flac,
                 :flac
 
@@ -45,15 +45,15 @@ class Song
   end
 
   def has_wav?
-    wav && File.exists? wav
+    wav && File.exists?(wav)
   end
 
   def has_tmp_mp3?
-    tmp_mp3 && File.exists? tmp_mp3
+    tmp_mp3 && File.exists?(tmp_mp3)
   end
 
   def has_mp3?
-    mp3 && File.exists? mp3
+    mp3 && File.exists?(mp3)
   end
 
   def converted_to_mp3?
@@ -61,22 +61,46 @@ class Song
   end
 
   def has_tmp_flac?
-    tmp_flac && File.exists? tmp_flac
+    tmp_flac && File.exists?(tmp_flac)
   end
 
   def has_flac?
-    flac && File.exists? flac
+    flac && File.exists?(flac)
   end
 
   def converted_to_flac?
     has_tmp_flac? || has_flac?
   end
 
+  def move_tmp_mp3_to_mp3
+    if has_mp3?
+        puts "#{mp3} already exists"
+        return
+    end
+    unless has_tmp_mp3?
+        puts "There is no ripped mp3 #{tmp_mp3}"
+        return
+    end
+    FileUtils.mv(tmp_mp3,mp3)
+  end
+
+ def move_tmp_flac_to_flac
+    if has_flac?
+        puts "#{flac} already exists"
+        return
+    end
+    unless has_tmp_flac?
+        puts "There is no ripped flac #{tmp_flac}"
+        return
+    end
+    FileUtils.mv(tmp_flac,flac)
+  end
+
   def generate_filename_prefix
     "#{artist} - #{sprintf("%02d",track_number)} - #{track_name}"
   end
   
-  def apply_to_mp3(filename)
+  def apply_to_mp3(filename = mp3)
     command = "id3v2 '#{filename}' "
     command += "-a '#{artist}' " if artist
     command += "-A '#{album}' " if album
@@ -84,8 +108,23 @@ class Song
     command += "-T '#{track_number}' " if track_number
     command += "--TPOS '#{disc_number}' " if disc_number
     command += "-y '#{date}' " if date
-    puts command
     Command.run command
+  end
+
+  def apply_to_flac(filename = flac)
+    command = "metaflac "
+    command += meta_flac_add_tag_string("ALBUM",album) if album
+    command += meta_flac_add_tag_string("ARTIST",artist) if artist
+    command += meta_flac_add_tag_string("TITLE",track_name) if track_name
+    command += meta_flac_add_tag_string("TRACKNUMBER",track_number) if track_number
+    command += meta_flac_add_tag_string("DISCNUMBER",disc_number) if disc_number
+    command += meta_flac_add_tag_string("DATE",date) if date
+    command += "\"#{filename}\""
+    Command.run command
+  end
+
+  def meta_flac_add_tag_string(tag,value)
+    "--set-tag=\"#{tag}=#{value}\" "
   end
 
   def song_exists?(album_path,extension)
@@ -113,7 +152,7 @@ class Song
   end
 
   def self.from_meta_flac_hash(hash,filename)
-    options = {flac: filename}
+    options = {:flac => filename}
     options[:album] = hash["ALBUM"]
     options[:artist] = hash["ARTIST"]
     options[:track_name] = hash["TITLE"]

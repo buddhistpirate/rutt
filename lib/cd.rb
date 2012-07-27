@@ -12,7 +12,8 @@ class Cd
 
     def write_metadata_to_file(force = false)
         FileUtils.mkpath(disc_path)
-        unless File.exists?(yaml_path) || force
+
+        if force || ! File.exists?(yaml_path)
             puts "Writing meta info to #{yaml_path}"
             File.open(yaml_path,"w+") do |file|
                 file.puts album.to_yaml
