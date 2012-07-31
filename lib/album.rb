@@ -71,7 +71,7 @@ class Album
     end
 
     def self.choose_result(freedb)
-        return freedb.get_result(0) unless freedb.results.size > 1
+        abort("Results size was #{freedb.results.size} not 1")  unless freedb.results.size == 1
         return freedb.get_result(0)
     end
 
