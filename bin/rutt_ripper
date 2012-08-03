@@ -7,41 +7,37 @@ FLAC_ROOT= File.expand_path '~/Audio/Lossless'
 
 cd = Cd.new(RIP_ROOT)
 
-# TODO: Get DiscID from DISC
-# TODO: Check to see if we have a yaml file. If not or if freedb-force passed
-# Then hit freedb for the rest of the information
 cd.fetch_metadata
 cd.write_metadata_to_file
 yaml_path = cd.yaml_path
 
-# TODO: Open Editor for CD Info if just fetched from freedb or force passed
 system("/usr/bin/editor #{yaml_path}")
 cd.reload_album_info_from_yaml
 album = cd.album
 
 cd.rip_to_wav
 cd.write_metadata_to_file(true)
-#Write YAML to save WAV file info
 
 disc_path = cd.disc_path
 wav_path = cd.wav_path
 
 transcoder = Transcoder.new(album.songs)
 
+puts "Ripping album to MP3"
 tmp_mp3_path = "#{disc_path}/mp3"
 transcoder.convert_all_wav_to_mp3(tmp_mp3_path)
 cd.write_metadata_to_file(true)
-#Write YAML to save TMP_MP3 State
 
+puts "Moving Album to #{MP3_ROOT}"
 album.move_ripped_mp3s_and_tag(MP3_ROOT)
 cd.write_metadata_to_file(true)
-#Write YAML to save MP3 State
 
-# Rip WAV to Flac
+puts "Ripping album to FLAC"
 flac_path = "#{disc_path}/flac"
 transcoder.convert_all_wav_to_flac(flac_path)
-album.move_ripped_flacs_and_tag(FLAC_ROOT)
-#Write YAML to save TMP_FLAC State
-
 cd.write_metadata_to_file(true)
+
+puts "Moving Album to #{FLAC_ROOT}"
+album.move_ripped_flacs_and_tag(FLAC_ROOT)
+
 #Delete WAVs

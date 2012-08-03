@@ -20,11 +20,11 @@ class Song
       @track_number = options[:track_number] || ""
       @disc_number = options[:disc_number]  if options[:disc_number].to_i > 0
       @date = options[:date] unless options[:date].to_i < 1900
-      @wav = options[:wav]
-      @tmp_mp3 = options[:tmp_mp3]
-      @mp3 = options[:mp3]
-      @tmp_flac = options[:tmp_flac]
-      @flac = options[:flac]
+      @wav = options[:wav] if options[:wav]
+      @tmp_mp3 = options[:tmp_mp3] if options[:tmp_mp3]
+      @mp3 = options[:mp3] if options[:mp3]
+      @tmp_flac = options[:tmp_flac] if options[:tmp_flac]
+      @flac = options[:flac] if options[:flac]
     end
   end
 
@@ -34,13 +34,13 @@ class Song
 
   def generate_flac_filename
     generate_filename_prefix + ".flac"
-  end 
+  end
 
   def generate_mp3_filename
     generate_filename_prefix + ".mp3"
   end
 
-  def tmp_filename_prefix 
+  def tmp_filename_prefix
     sprintf("%03d",track_number)
   end
 
@@ -74,24 +74,24 @@ class Song
 
   def move_tmp_mp3_to_mp3
     if has_mp3?
-        puts "#{mp3} already exists"
-        return
+      puts "#{mp3} already exists"
+      return
     end
     unless has_tmp_mp3?
-        puts "There is no ripped mp3 #{tmp_mp3}"
-        return
+      puts "There is no ripped mp3 #{tmp_mp3}"
+      return
     end
     FileUtils.mv(tmp_mp3,mp3)
   end
 
- def move_tmp_flac_to_flac
+  def move_tmp_flac_to_flac
     if has_flac?
-        puts "#{flac} already exists"
-        return
+      puts "#{flac} already exists"
+      return
     end
     unless has_tmp_flac?
-        puts "There is no ripped flac #{tmp_flac}"
-        return
+      puts "There is no ripped flac #{tmp_flac}"
+      return
     end
     FileUtils.mv(tmp_flac,flac)
   end
@@ -99,7 +99,7 @@ class Song
   def generate_filename_prefix
     "#{artist} - #{sprintf("%02d",track_number)} - #{track_name}"
   end
-  
+
   def apply_to_mp3(filename = mp3)
     escaped_filename = Shellwords.escape filename
     command = "id3v2 #{escaped_filename} "

@@ -1,63 +1,91 @@
 class Cd
 
-    attr_reader :album, :rip_root
+  attr_reader :album, :rip_root, :disc_id
 
-    def initialize(rip_root)
-        @rip_root = rip_root
+  def initialize(rip_root)
+    @rip_root = rip_root
+
+  end
+
+  def fetch_metadata
+    freedb = Freedb.new("/dev/cdrom")
+    @disc_id = freedb.discid
+
+    if File.exists? yaml_path
+      reload_album_info_from_yaml
+      return
     end
 
-    def fetch_metadata
-        @album = Album.from_cdrom
+    result = metadata_from_freedb
+    unless result
+      num_tracks = result.tracks.size
+      @album = Album.blank_metadata(num_tracks, disc_id)
+      return
     end
+    @album = Album.from_freedb_result(result)
+  end
 
-    def write_metadata_to_file(force = false)
-        FileUtils.mkpath(disc_path)
+  def metadata_from_freedb
+    freedb.fetch
 
-        if force || ! File.exists?(yaml_path)
-            puts "Writing meta info to #{yaml_path}"
-            File.open(yaml_path,"w+") do |file|
-                file.puts album.to_yaml
-            end
-        end
+    case freedb.results.size
+      when 0
+        return nil
+      when 1
+        return freedb.get_result(0)
+      else
+        abort("Results size was #{freedb.results.size} not 1")
     end
+  end
 
-    def reload_album_info_from_yaml
-        @album = YAML.load_file(yaml_path)
-        album.update_songs
-    end
+  def write_metadata_to_file(force = false)
+    FileUtils.mkpath(disc_path)
 
-    def rip_to_wav
-        songs = album.songs
-        puts "Ripping #{songs.size} tracks from #{album.name} by #{album.artist} from #{album.date} to wav at #{wav_path}"
-        FileUtils.mkpath(wav_path)
-        songs.each do |song|
-            track_number = song.track_number
-            full_wav_path = generate_full_wav_path(song)
-            song.wav = full_wav_path
-            if File.exists? full_wav_path
-                puts "Track #{track_number} already ripped to wav at #{full_wav_path}"
-            else
-                puts "Ripping track #{track_number} to wav at #{full_wav_path}"
-                Encoder.track_to_wav(track_number,full_wav_path)
-            end
-        end
+    if force || ! File.exists?(yaml_path)
+      puts "Writing meta info to #{yaml_path}"
+      File.open(yaml_path,"w+") do |file|
+        file.puts album.to_yaml
+      end
     end
+  end
 
-    def yaml_path
-        "#{disc_path}/cd_info.yml"
-    end
+  def reload_album_info_from_yaml
+    @album = YAML.load_file(yaml_path)
+    album.update_songs
+  end
 
-    def wav_path
-        "#{disc_path}/wav"
+  def rip_to_wav
+    songs = album.songs
+    puts "Ripping #{songs.size} tracks from #{album.name} by #{album.artist} from #{album.date} to wav at #{wav_path}"
+    FileUtils.mkpath(wav_path)
+    songs.each do |song|
+      track_number = song.track_number
+      full_wav_path = generate_full_wav_path(song)
+      song.wav = full_wav_path
+      if File.exists? full_wav_path
+        puts "Track #{track_number} already ripped to wav at #{full_wav_path}"
+      else
+        puts "Ripping track #{track_number} to wav at #{full_wav_path}"
+        Encoder.track_to_wav(track_number,full_wav_path)
+      end
     end
+  end
 
-    def generate_full_wav_path(song)
-        "#{wav_path}/#{song.generate_wav_filename}"
-    end
+  def yaml_path
+    "#{disc_path}/cd_info.yml"
+  end
 
-    def disc_path
-       "#{rip_root}/#{album.discid}"
-    end
+  def wav_path
+    "#{disc_path}/wav"
+  end
+
+  def generate_full_wav_path(song)
+    "#{wav_path}/#{song.generate_wav_filename}"
+  end
+
+  def disc_path
+    "#{rip_root}/#{disc_id}"
+  end
 
 end
 
