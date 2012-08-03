@@ -7,7 +7,7 @@ unless Kernel.respond_to?(:require_relative)
   end
 end
 
-require 'freedb'
+require_relative '../ruby-freedb-0.5/lib/freedb'
 require 'fileutils'
 require 'yaml'
 require_relative 'command'

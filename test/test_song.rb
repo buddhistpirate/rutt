@@ -1,6 +1,16 @@
 require_relative "test_helper"
 class SongTest < Test::Unit::TestCase
 
+  def test_can_generate_filename
+    song = Song.new(
+        artist: "Phish",
+        track_number: 1,
+        track_name: "Fee"
+    )
+
+    assert_equal "Phish - 01 - Fee", song.generate_filename_prefix
+  end
+
   def test_can_convert_meta_flac_to_hash
     meta_data = Song.convert_meta_flac_to_hash(meta_flac_output)
     assert_equal "Down With Disease", meta_data["TITLE"]
@@ -10,8 +20,9 @@ class SongTest < Test::Unit::TestCase
 
   def test_can_create_from_meta_flac_hash
     meta_data = Song.convert_meta_flac_to_hash(meta_flac_output)
-    song_info = Song.from_meta_flac_hash(meta_data)
+    song_info = Song.from_meta_flac_hash(meta_data,"bogus_filename")
 
+    assert_equal "bogus_filename", song_info.flac
     assert_equal "Down With Disease", song_info.track_name
     assert_equal "Phish", song_info.artist
     assert_equal "2012/06/10 I Bonnaroo, TN", song_info.album
