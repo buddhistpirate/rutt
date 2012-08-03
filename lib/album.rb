@@ -64,12 +64,12 @@ class Album
   end
 
   def self.blank_metadata(num_tracks,disc_id = nil)
-    song = []
+    songs = []
     num_tracks.times do |seed_num|
       track_num = seed_num + 1
-      songs << Song.new(track_number: track_num)
+      songs << Song.new(:track_number => track_num)
     end
-    self.new(songs, result.discid)
+    self.new(songs, disc_id)
   end
 
 

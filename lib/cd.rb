@@ -16,16 +16,16 @@ class Cd
       return
     end
 
-    result = metadata_from_freedb
+    result = metadata_from_freedb(freedb)
     unless result
-      num_tracks = result.tracks.size
+      num_tracks = freedb.tracks.size
       @album = Album.blank_metadata(num_tracks, disc_id)
       return
     end
     @album = Album.from_freedb_result(result)
   end
 
-  def metadata_from_freedb
+  def metadata_from_freedb(freedb)
     freedb.fetch
 
     case freedb.results.size
