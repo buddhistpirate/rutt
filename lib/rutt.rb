@@ -10,6 +10,7 @@ end
 require 'freedb'
 require 'fileutils'
 require 'yaml'
+require 'shellwords'
 require_relative 'command'
 require_relative 'song'
 require_relative 'album'

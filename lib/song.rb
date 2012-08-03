@@ -101,25 +101,27 @@ class Song
   end
   
   def apply_to_mp3(filename = mp3)
-    command = "id3v2 '#{filename}' "
-    command += "-a '#{artist}' " if artist
-    command += "-A '#{album}' " if album
-    command += "-t '#{track_name}' " if track_name
-    command += "-T '#{track_number}' " if track_number
+    escaped_filename = Shellwords.escape filename
+    command = "id3v2 #{escaped_filename} "
+    command += "-a #{Shellwords.escape artist} " if artist
+    command += "-A #{Shellwords.escape album} " if album
+    command += "-t #{Shellwords.escape track_name} " if track_name
+    command += "-T #{track_number} " if track_number
     command += "--TPOS '#{disc_number}' " if disc_number
-    command += "-y '#{date}' " if date
+    command += "-y #{date} " if date
     Command.run command
   end
 
   def apply_to_flac(filename = flac)
+    escaped_filename = Shellwords.escape filename
     command = "metaflac "
-    command += meta_flac_add_tag_string("ALBUM",album) if album
-    command += meta_flac_add_tag_string("ARTIST",artist) if artist
-    command += meta_flac_add_tag_string("TITLE",track_name) if track_name
+    command += meta_flac_add_tag_string("ALBUM",Shellwords.escape(album)) if album
+    command += meta_flac_add_tag_string("ARTIST",Shellwords.escape(artist)) if artist
+    command += meta_flac_add_tag_string("TITLE",Shellwords.escape(track_name)) if track_name
     command += meta_flac_add_tag_string("TRACKNUMBER",track_number) if track_number
     command += meta_flac_add_tag_string("DISCNUMBER",disc_number) if disc_number
     command += meta_flac_add_tag_string("DATE",date) if date
-    command += "\"#{filename}\""
+    command += escaped_filename
     Command.run command
   end
 
@@ -138,7 +140,8 @@ class Song
   end
 
   def self.meta_flac(filename)
-    `metaflac --export-tags-to=- #{filename}`
+    escaped_filename = Shellwords.escape filename
+    `metaflac --export-tags-to=- #{escaped_filename}`
   end
 
   def self.convert_meta_flac_to_hash(output)
