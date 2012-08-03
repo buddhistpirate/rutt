@@ -10,6 +10,7 @@ end
 require_relative '../ruby-freedb-0.5/lib/freedb'
 require 'fileutils'
 require 'yaml'
+require 'shellwords'
 require_relative 'command'
 require_relative 'song'
 require_relative 'album'
