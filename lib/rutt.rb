@@ -1,4 +1,3 @@
-
 unless Kernel.respond_to?(:require_relative)
   module Kernel
     def require_relative(path)
@@ -17,3 +16,8 @@ require_relative 'album'
 require_relative 'encoder'
 require_relative 'cd'
 require_relative 'transcoder'
+
+
+RIP_ROOT = File.expand_path '~/Audio/rutt'
+MP3_ROOT = File.expand_path '~/Audio/Lossy'
+FLAC_ROOT= File.expand_path '~/Audio/Lossless'

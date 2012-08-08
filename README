@@ -1,0 +1,13 @@
+Rutt is a library for the ripping, tagging and transcoding of music under linux.
+
+Binary dependencies
+
+id3v2
+sudo apt-get install id3v2
+
+metaflac
+sudo apt-get install flac
+
+Some dependencies that are not simple:
+
+ruby-freedb: http://ruby-freedb.rubyforge.org

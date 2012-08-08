@@ -43,15 +43,12 @@ class Cd
 
     if force || ! File.exists?(yaml_path)
       puts "Writing meta info to #{yaml_path}"
-      File.open(yaml_path,"w+") do |file|
-        file.puts album.to_yaml
-      end
+      album.write_metadata_to_file yaml_path
     end
   end
 
   def reload_album_info_from_yaml
-    @album = YAML.load_file(yaml_path)
-    album.update_songs
+    @album = Album.from_yaml(yaml_path)
   end
 
   def rip_to_wav

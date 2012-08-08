@@ -37,6 +37,12 @@ class Album
     end
   end
 
+  def tag_mp3s
+    songs.each do |song|
+        song.apply_to_mp3
+    end
+  end
+
   def move_ripped_flacs_and_tag(lossless_root)
     flac_album_path = full_album_path(lossless_root)
     FileUtils.mkpath(flac_album_path)
@@ -53,6 +59,12 @@ class Album
       song.artist = artist
       song.date = date
     end
+  end
+
+  def write_metadata_to_file(file)
+      File.open(file,"w+") do |file|
+        file.puts to_yaml
+      end
   end
 
   def self.from_freedb_result(result)
@@ -81,6 +93,12 @@ class Album
       songs << Song.from_flac(flac_filename)
     end
     self.new(songs)
+  end
+
+  def self.from_yaml(file)
+    album = YAML.load_file(file)
+    album.update_songs
+    album
   end
 
 end

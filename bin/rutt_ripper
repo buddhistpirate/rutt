@@ -1,10 +1,6 @@
 #!/usr/bin/env ruby
 require File.expand_path('../../lib/rutt.rb', __FILE__)
 
-RIP_ROOT = File.expand_path '~/Audio/rutt'
-MP3_ROOT = File.expand_path '~/Audio/Lossy'
-FLAC_ROOT= File.expand_path '~/Audio/Lossless'
-
 cd = Cd.new(RIP_ROOT)
 
 cd.fetch_metadata
