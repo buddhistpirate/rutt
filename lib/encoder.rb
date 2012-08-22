@@ -28,7 +28,7 @@ MP3_BITRATE=192
         "lame -b #{MP3_BITRATE} -h - #{escaped_mp3_filename}"
     end
 
-    def self.flac_decode_command(flace_filename)
+    def self.flac_decode_command(flac_filename)
         escaped_flac_filename = Shellwords.escape flac_filename
         "flac -dc #{escaped_flac_filename}"
     end

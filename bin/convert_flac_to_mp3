@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require File.expand_path('../../lib/rutt.rb', __FILE__)
 
-LOSSY_ROOT=File.expand("~/Audio/Lossy")
+LOSSY_ROOT=File.expand_path("~/Audio/Lossy")
 
 puts "Transcoding file from flac to mp3"
 
@@ -17,4 +17,3 @@ puts "Adding Metadata to MP3 files"
         puts "Updating ID3v2 tags on #{mp3_filename}"
         song.apply_to_mp3 mp3_filename
     end
-end

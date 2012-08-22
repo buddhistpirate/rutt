@@ -49,6 +49,6 @@ class Transcoder
     end
 
     def relative_mp3_filename(directory,song)
-        "#{mp3_output_directory}/#{song.generate_mp3_filename}"
+        "#{directory}/#{song.generate_mp3_filename}"
     end
 end

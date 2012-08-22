@@ -6,7 +6,10 @@ unless Kernel.respond_to?(:require_relative)
   end
 end
 
-require_relative '../ruby-freedb-0.5/lib/freedb'
+lib_root = File.dirname File.expand_path(__FILE__)
+
+#require "#{lib_root}/../ruby-freedb-0.5/lib/freedb.rb"
+require 'freedb'
 require 'fileutils'
 require 'yaml'
 require 'shellwords'
