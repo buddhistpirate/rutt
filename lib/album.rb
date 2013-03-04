@@ -69,9 +69,22 @@ class Album
 
   def self.from_freedb_result(result)
     songs = []
+    artist = result.artist
+    album = result.title
+    date = result.year
     result.tracks.each_with_index do |track_hash,num|
-      songs << Song.from_freedb_result(result,num)
+      title = track_hash["title"]
+      unless title == "[Data]"
+        songs << Song.new(
+            :album => album,
+            :artist => artist, 
+            :date => date, 
+            :track_name => title, 
+            :track_number => num + 1
+            )
+      end
     end
+
     self.new(songs, result.discid)
   end
 

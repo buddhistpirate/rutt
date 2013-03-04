@@ -107,7 +107,7 @@ class Song
     command += "-A #{Shellwords.escape album} " if album
     command += "-t #{Shellwords.escape track_name} " if track_name
     command += "-T #{track_number} " if track_number
-    command += "--TPOS '#{disc_number}' " if disc_number
+    command += "--TPOS #{disc_number} " if disc_number
     command += "-y #{date} " if date
     Command.run command
   end
@@ -165,13 +165,4 @@ class Song
     new(options)
   end
 
-  def self.from_freedb_result(result,track_number)
-    options = {}
-    options[:album] = result.title
-    options[:artist] = result.artist
-    options[:track_name] = result.tracks[track_number]["title"]
-    options[:track_number] = track_number + 1
-    options[:date] = result.year
-    new(options)
-  end
 end
